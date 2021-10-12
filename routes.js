@@ -25,5 +25,18 @@ router.post("/api/notes", (req, res) => {
   fs.writeFileSync("./db/db.json", stringNote);
   res.json(notes);
 });
+//router.delete deletes notes by removing note with given id and rewriting the file with non deleted notes
+router.delete("/api/notes/:id", (req, res) => {
+  const notes = JSON.parse(fs.readFileSync("./db/db.json"));
+  const noteID = req.params.id;
+  for (let i = 0; i < notes.length; i++) {
+    if (notes[i].id === noteID) {
+      notes.splice(i, 1);
+      const newNotes = JSON.stringify(notes);
+      fs.writeFileSync("./db/db.json", newNotes);
+      return res.json(notes);
+    }
+  }
+});
 
 module.exports = router;
